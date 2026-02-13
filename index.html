@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Dear Moon | Valentine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Great+Vibes&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --rose: #ff4d6d;
+            --blush: #ffb3c1;
+            --cream: #fff0f3;
+            --wine: #590d22;
+            --gold: #d4af37;
+        }
+
+        body, html {
+            margin: 0; padding: 0;
+            height: 100%; width: 100%;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cream);
+            color: var(--wine);
+            overflow: hidden;
+        }
+
+        h1, h2, .timer-label { font-family: 'Dancing Script', cursive; color: var(--rose); }
+
+        .page {
+            display: none; height: 100vh; width: 100vw;
+            flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px; box-sizing: border-box;
+            position: absolute; background: var(--cream);
+        }
+
+        .active { display: flex; animation: slideIn 0.8s forwards; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+        .btn {
+            background: var(--rose); color: white; border: none;
+            padding: 12px 35px; border-radius: 50px; font-size: 1.1rem;
+            cursor: pointer; margin-top: 20px; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+            font-weight: 600;
+        }
+        .btn:hover { background: var(--wine); transform: scale(1.05); }
+
+        .grid { display: grid; grid-template-columns: repeat(3, 80px); gap: 10px; margin-top: 20px; }
+        .cell { width: 80px; height: 80px; background: white; border: 2px solid var(--blush); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; cursor: pointer; }
+
+        .couple-box {
+            width: 220px; height: 220px; border: 6px solid white;
+            border-radius: 50%; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 15px; background: var(--blush);
+        }
+        .couple-box img { width: 100%; height: 100%; object-fit: cover; }
+        
+        #timer-display { display: flex; gap: 10px; margin-top: 15px; }
+        .time-unit { background: white; padding: 10px; border-radius: 10px; min-width: 55px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+        #run-btn { position: absolute; transition: 0.1s; }
+
+        .floating-heart { position: fixed; bottom: -50px; animation: rise 4s linear infinite; opacity: 0.6; z-index: -1; }
+        @keyframes rise { to { transform: translateY(-110vh) rotate(360deg); } }
+
+        /* Certificate Styles */
+        #cert-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center;
+        }
+
+        #certificate {
+            width: 850px; max-width: 95%; height: auto; min-height: 600px; background: white; padding: 40px;
+            border: 15px double var(--gold); position: relative;
+            background-image: radial-gradient(circle, #fffaf0 0%, #fff 100%);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5); text-align: center;
+            box-sizing: border-box;
+        }
+
+        .cert-title { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--wine); margin: 0; }
+        .cert-names { font-family: 'Dancing Script', cursive; font-size: 2.8rem; color: var(--rose); border-bottom: 2px solid var(--gold); display: inline-block; padding: 0 40px; margin: 10px 0; }
+        
+        .vow-section {
+            margin-top: 25px;
+            padding: 20px;
+            border: 1px dashed var(--gold);
+            background: rgba(212, 175, 55, 0.05);
+            border-radius: 10px;
+        }
+        .vow-title { font-family: 'Dancing Script', cursive; font-size: 1.8rem; color: var(--wine); }
+        .vow-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; line-height: 1.6; color: #555; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #cert-overlay, #cert-overlay * { visibility: visible; }
+            #cert-overlay { position: absolute; left: 0; top: 0; background: white; }
+            .no-print { display: none; }
+            #certificate { border: 10px double black; box-shadow: none; margin: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="p1" class="page active">
+        <h1>Hello, My Dear Moon</h1>
+        <p>I’ve built a world where every day is a celebration of us.</p>
+        <button class="btn" onclick="go(2)">Enter Our World</button>
+    </div>
+
+    <div id="p2" class="page">
+        <h2 style="margin-bottom: 10px; text-shadow: 0 0 10px rgba(255, 77, 109, 0.3)">The Week of Love</h2>
+        <p style="max-width: 450px; font-size: 0.9rem; text-align: left; margin: 10px auto; line-height: 1.8;">
+            🌹 <b>Rose Day:</b> You are the rarest bloom.<br>
+            🤟 <b>Propose Day:</b> I love you till eternity.<br>
+            🍫 <b>Chocolate Day:</b> Sweeter than any treat.<br>
+            🧸 <b>Teddy Day:</b> My favorite person to hold.<br>
+            💍 <b>Promise Day:</b> I promise to be your always.<br>
+            🫂 <b>Hug Day:</b> Your hug is my real sukoon each time.<br>
+            😘 <b>Kiss Day:</b> Your kisses are pure magic.<br>
+            💞 <b>Valentine's Day:</b> You are my everything dear moon.
+        </p>
+        <button class="btn" onclick="go(3)">Play a Game?</button>
+    </div>
+
+    <div id="p3" class="page">
+        <h2>Game: Heart Match</h2>
+        <p>Find the pairs that belong together like us.</p>
+        <div class="grid" id="memory-grid"></div>
+        <button class="btn" id="next3" style="display:none" onclick="go(4)">Continue Journey</button>
+    </div>
+
+    <div id="p4" class="page">
+        <h2>Love Calculator</h2>
+        <p>Checking our destiny...</p>
+        <div style="font-size: 1.5rem; font-weight: bold; color: var(--wine);">
+            You + Me = <span id="calc-res">??</span>%
+        </div>
+        <button class="btn" onclick="runCalc()">Calculate</button>
+        <button class="btn" id="next4" style="display:none" onclick="go(5)">Written in the Stars</button>
+    </div>
+
+    <div id="p5" class="page">
+        <h2>Game: Catch My Love</h2>
+        <p>Catch 5 roses to see my next message!</p>
+        <div id="game-area" style="width:300px; height:200px; border:2px dashed var(--rose); position:relative; background:white; border-radius:20px; overflow: hidden;">
+            <span id="game-rose" style="position:absolute; cursor:pointer; font-size:2rem; left: 40%; top: 40%;">🌹</span>
+        </div>
+        <h3 id="score-display">Score: 0</h3>
+    </div>
+
+    <div id="p6" class="page">
+        <h2>A Secret for You</h2>
+        <div style="background:white; padding:30px; border-radius:20px; max-width:400px;">
+            <p>"If I had a flower for every time I thought of you, I could walk through my garden forever."</p>
+        </div>
+        <button class="btn" onclick="go(7)">One More Game</button>
+    </div>
+
+    <div id="p7" class="page">
+        <h2>Unscramble My Heart</h2>
+        <h1 style="letter-spacing: 10px;">LSUOAMET</h1>
+        <input type="text" id="word-input" placeholder="What are we?" style="padding:10px; border-radius:10px; border:1px solid var(--blush);">
+        <button class="btn" onclick="checkWord()">Verify</button>
+        <button class="btn" id="next7" style="display:none" onclick="go(8)">Exactly.</button>
+    </div>
+
+    <div id="p8" class="page">
+        <h2>Why You?</h2>
+        <p id="comp-text">Click to see why you are my moon...</p>
+        <button class="btn" onclick="newComp()">Tell Me Why</button>
+        <button class="btn" id="next8" style="display:none" onclick="go(9)">I Have a Question</button>
+    </div>
+
+    <div id="p9" class="page">
+        <h2>The Big Question</h2>
+        <p>Will you be my Valentine and also my forever wife?</p>
+        <div style="margin-top: 50px; position: relative; width: 300px; height: 100px;">
+            <button class="btn" onclick="accept()">YES!</button>
+            <button class="btn" id="run-btn" onmouseover="runAway()">No</button>
+        </div>
+    </div>
+
+    <div id="p10" class="page">
+        <div class="couple-box">
+            <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=1000" alt="Us">
+        </div>
+        <h2>These hearts have only our names written on them, My Moon<br>
+        चाँद को देखने से बेहतर है तुम्हें देखना,<br>
+        क्योंकि तुममें ही तो मेरी दुनिया बसती है। 🌍💗🌙</h2>
+        <div class="timer-label">Time since you said YES for marriage approval:</div>
+        <div id="timer-display">
+            <div class="time-unit"><span id="days">0</span><br><small>Days</small></div>
+            <div class="time-unit"><span id="hours">0</span><br><small>Hrs</small></div>
+            <div class="time-unit"><span id="mins">0</span><br><small>Min</small></div>
+            <div class="time-unit"><span id="secs">0</span><br><small>Sec</small></div>
+        </div>
+        <button class="btn" onclick="showCert()" style="background: var(--gold);">📜 View Marriage Certificate</button>
+        <p style="margin-top: 20px; font-style: italic;">"I love you my moon❤️ in your every situation."</p>
+    </div>
+
+    <div id="cert-overlay">
+        <div id="certificate">
+            <div class="cert-title">Marriage of Souls</div>
+            <p style="font-size: 1.1rem; margin-bottom: 5px;">This document officially certifies that</p>
+            <div class="cert-names">Moon & Your Ptidev</div>
+            <p style="font-size: 1.1rem; margin-top: 5px;">have pledged their souls to one another for eternity.</p>
+            
+            <div class="vow-section">
+                <div class="vow-title">Our Sacred Vows</div>
+                <div class="vow-text">
+                    "I promise to be your sukoon in every chaos, to love you when the moon is bright and when it is hidden. I vow to cherish you as my first and last Valentine, and to build a world where your smile is my only priority. You are my Mrs. Moon today and forever."<br><br>
+                    "Stars are many, but the Moon is one. In a sky full of people, I only see you."
+                </div>
+            </div>
+
+            <div id="cert-date" style="font-weight: bold; color: var(--wine); margin-top: 15px;"></div>
+            <p style="font-family: 'Great Vibes'; font-size: 1.8rem; color: var(--rose); margin-top: 10px;">Forever & Always</p>
+            
+            <div class="no-print" style="margin-top: 20px;">
+                <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+                <button class="btn" onclick="closeCert()" style="background: #666;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let startTime;
+        let catchScore = 0;
+
+        function go(n) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('p' + n).classList.add('active');
+            if(n === 3) initMemory();
+            if(n === 5) initCatch();
+        }
+
+        function initMemory() {
+            const icons = ['💖','🌹','🌙','💖','🌹','🌙'];
+            icons.sort(() => Math.random() - 0.5);
+            const grid = document.getElementById('memory-grid');
+            grid.innerHTML = '';
+            let flipped = [];
+            icons.forEach(icon => {
+                const cell = document.createElement('div');
+                cell.className = 'cell'; cell.onclick = function() {
+                    if(flipped.length < 2 && !this.innerText) {
+                        this.innerText = icon; flipped.push(this);
+                        if(flipped.length === 2) {
+                            if(flipped[0].innerText === flipped[1].innerText) {
+                                flipped = []; if([...document.querySelectorAll('.cell')].every(c => c.innerText)) document.getElementById('next3').style.display='block';
+                            } else {
+                                setTimeout(() => { flipped.forEach(c => c.innerText = ''); flipped = []; }, 500);
+                            }
+                        }
+                    }
+                };
+                grid.appendChild(cell);
+            });
+        }
+
+        function runCalc() {
+            document.getElementById('calc-res').innerText = "100%";
+            document.getElementById('next4').style.display = 'block';
+        }
+
+        function initCatch() {
+            catchScore = 0;
+            const rose = document.getElementById('game-rose');
+            rose.onclick = () => {
+                catchScore++;
+                document.getElementById('score-display').innerText = "Score: " + catchScore;
+                rose.style.left = Math.random() * 80 + '%';
+                rose.style.top = Math.random() * 80 + '%';
+                if(catchScore >= 5) {
+                    setTimeout(() => go(6), 300);
+                }
+            };
+        }
+
+        function checkWord() {
+            if(document.getElementById('word-input').value.toUpperCase() === 'SOULMATE') {
+                document.getElementById('next7').style.display = 'block';
+            }
+        }
+
+        const comps = ["You are my Queen of Heart.", "Your eyes are like the moon.", "You're my sweetest rasmalai.", "You're my real sukoon in every mood.", "I can't wait to marry you."];
+        let cIdx = 0;
+        function newComp() {
+            document.getElementById('comp-text').innerText = comps[cIdx % comps.length];
+            cIdx++; if(cIdx >= 3) document.getElementById('next8').style.display = 'block';
+        }
+
+        function runAway() {
+            const btn = document.getElementById('run-btn');
+            btn.style.left = Math.random() * 80 + '%';
+            btn.style.top = Math.random() * 80 + '%';
+        }
+
+        function accept() {
+            startTime = new Date();
+            document.getElementById('cert-date').innerText = "Certified on: " + startTime.toDateString();
+            go(10);
+            setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const diff = new Date() - startTime;
+            document.getElementById('days').innerText = Math.floor(diff / 86400000);
+            document.getElementById('hours').innerText = Math.floor((diff / 3600000) % 24);
+            document.getElementById('mins').innerText = Math.floor((diff / 60000) % 60);
+            document.getElementById('secs').innerText = Math.floor((diff / 1000) % 60);
+        }
+
+        function showCert() { document.getElementById('cert-overlay').style.display = 'flex'; }
+        function closeCert() { document.getElementById('cert-overlay').style.display = 'none'; }
+
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.innerHTML = '❤️'; h.className = 'floating-heart';
+            h.style.left = Math.random() * 100 + 'vw';
+            h.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 4000);
+        }, 400);
+    </script>
+</body>
+</html>
